@@ -5,10 +5,15 @@ using UnityEngine;
 public class GrammarApprochScript : MonoBehaviour
 {
     public GameObject unitA;
+    public float unitHeightA;
     public GameObject unitB;
+    public float unitHeightB;
     public GameObject unitC;
+    public float unitHeightC;
     public GameObject RoofA;
     public GameObject Window;
+    public GameObject DomeRoof;
+    public GameObject Tower;
     public string BaseGrammar;
     public float stepRotation;
     public int maxFloor;
@@ -17,6 +22,7 @@ public class GrammarApprochScript : MonoBehaviour
     public int branchMinFloor;
     public float step;
     public int domeNum;
+    public bool hasTower;
     //private Quaternion currentRotation;
     GameObject[] objects;
     // Start is called before the first frame update
@@ -88,80 +94,117 @@ public class GrammarApprochScript : MonoBehaviour
             Vector3 currentPosition = basePosition[i];
             Vector3 currentRotation = baseRotation[i];
             int blockID = Random.Range(1, 4);
-            print(blockID);
+            if (dome > 0)
+            {
+                if (i == count - 1)
+                {
+                    GenerateDomeBlock(currentPosition, currentRotation, unitC, onBranch[i]);
+                    dome--;
+                    continue;
+                }
+                if (Random.Range(1, 10) == 1)
+                {
+                    GenerateDomeBlock(currentPosition, currentRotation, unitC, onBranch[i]);
+                    dome--;
+                    continue;
+                }
+            }
             if (blockID == 1)
             {
-                GenerateBlock(currentPosition, currentRotation, unitA, onBranch[i]);
+                GenerateBlock(currentPosition, currentRotation, unitA, unitHeightA, onBranch[i]);
             }
             else if (blockID == 2)
             {
-                GenerateBlock(currentPosition, currentRotation, unitB, onBranch[i]);
+                GenerateBlock(currentPosition, currentRotation, unitB, unitHeightB, onBranch[i]);
             }
             else
             {
-                GenerateBlock(currentPosition, currentRotation, unitC, onBranch[i]);
+                GenerateBlock(currentPosition, currentRotation, unitA, unitHeightA, onBranch[i]);
             }
         }
     }
 
     
 
-    void GenerateBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, bool onBranch)
+    void GenerateBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, float unitHeight, bool onBranch)
     {
         int floor = Random.Range(minFloor, maxFloor + 1);
         if (onBranch)
         {
             floor = Random.Range(branchMinFloor, branchMaxFloor + 1);
         }
-        GameObject Block = GameObject.Instantiate(unit, new Vector3(targetPosition.x, unit.transform.localScale.y * floor/2,targetPosition.z), unit.transform.rotation);
-        float height = Block.transform.localScale.y / 2;
+        GameObject Block = GameObject.Instantiate(unit, new Vector3(targetPosition.x, unit.transform.localScale.y * unitHeight * floor/2,targetPosition.z), unit.transform.rotation);
         Block.transform.localScale = new Vector3(Block.transform.localScale.x, Block.transform.localScale.y * floor, Block.transform.localScale.z);
-       // Block.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y / 2, Block.transform.position.z);
-        //Block.transform.position += new Vector3(0, Block.transform.localScale.y / 2, 0);
-        //float y = Block.transform.localScale.y / 2 - Block.transform.position.y;
-        //Block.transform.position += new Vector3(0, y, 0);
-        //Block.transform.SetPositionAndRotation(new Vector3(Block.transform.position.x, Block.transform.localScale.y / 2, Block.transform.position.x), Quaternion.Euler(new Vector3(0, 0, 0)));
-
+        if (unitHeight != 1)
+        {
+            Block.transform.position -= new Vector3(0, Block.transform.localScale.y * unitHeight / 2, 0);
+        }
+        if (onBranch && hasTower)
+        {
+            GenerateTower(new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), targetRotation);
+        }
 
         Block.transform.Rotate(targetRotation);
-
 
         //GenerateRoof(targetPosition,targetRotation,RoofA,floor);
 
 
 
-        GameObject Roof = GameObject.Instantiate(RoofA, new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z), Quaternion.Euler(new Vector3(0, 0, 0)));
+        GameObject Roof = GameObject.Instantiate(RoofA, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(new Vector3(0, 0, 0)));
         Roof.transform.Rotate(targetRotation);
         Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z);
         
         if (Random.Range(0, 7) == 1)
         {
-            GameObject window = GameObject.Instantiate(Window, new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z), Quaternion.Euler(targetRotation));
+            GameObject window = GameObject.Instantiate(Window, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(targetRotation));
         }
     }
 
-    void GenerateCylinderBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit)
+    void GenerateDomeBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, bool onBranch)
     {
-        int floor = Random.Range(1, maxFloor);
-        GameObject Block = GameObject.Instantiate(unit, new Vector3(targetPosition.x, unit.transform.localScale.y * floor, targetPosition.z), unit.transform.rotation);
-        float height = Block.transform.localScale.y / 2;
-        Block.transform.localScale = new Vector3(Block.transform.localScale.x, Block.transform.localScale.y * floor , Block.transform.localScale.z);
-        
+        int floor = Random.Range(minFloor, maxFloor + 1);
+        if (onBranch)
+        {
+            floor = Random.Range(branchMinFloor, branchMaxFloor + 1);
+        }
+        floor += 3;
+        GameObject Block = GameObject.Instantiate(unit, new Vector3(targetPosition.x, unit.transform.localScale.y *5f * floor/2 , targetPosition.z), unit.transform.rotation);
+        Block.transform.localScale = new Vector3(Block.transform.localScale.x, Block.transform.localScale.y * floor, Block.transform.localScale.z);
+        Block.transform.position -= new Vector3(0, Block.transform.localScale.y * 2.5f, 0);
+
+
         Block.transform.Rotate(targetRotation);
 
-
-
-        GameObject Roof = GameObject.Instantiate(RoofA, new Vector3(targetPosition.x + 7.5f, Block.transform.localScale.y, targetPosition.z - 7.5f), Quaternion.Euler(new Vector3(0, 0, 0)));
-        //Roof.transform.SetPositionAndRotation(new Vector3(Block.transform.position.x + 7.5f, Block.transform.localScale.y, Block.transform.position.z - 7.5f), Quaternion.Euler(targetRotation));
-        Roof.transform.Rotate(targetRotation);
-        Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y * 2, Block.transform.position.z);
+        GameObject Roof = GameObject.Instantiate(DomeRoof, new Vector3(Block.transform.position.x, Block.transform.localScale.y * 5, Block.transform.position.z), Quaternion.Euler(targetRotation));
 
     }
 
-    void GenerateRoof(Vector3 targetPosition, Vector3 targetRotation, GameObject unit,int floor)
+    void GenerateCylinderBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, float unitHeight, bool onBranch)
     {
-        GameObject Roof = GameObject.Instantiate(unit, new Vector3(targetPosition.x, targetPosition.y, targetPosition.z), unit.transform.rotation);
-        Roof.transform.Rotate(targetRotation);
+        int floor = Random.Range(minFloor, maxFloor + 1);
+        if (onBranch)
+        {
+            floor = Random.Range(branchMinFloor, branchMaxFloor + 1);
+        }
+        GameObject Block = GameObject.Instantiate(unit, new Vector3(targetPosition.x, unit.transform.localScale.y * unitHeight * floor / 2, targetPosition.z), unit.transform.rotation);
+        Block.transform.localScale = new Vector3(Block.transform.localScale.x, Block.transform.localScale.y * floor, Block.transform.localScale.z);
+        Block.transform.position -= new Vector3(0, Block.transform.localScale.y * unitHeight /2, 0);
+
+
+        Block.transform.Rotate(targetRotation);
+
+        GameObject Roof = GameObject.Instantiate(DomeRoof, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(targetRotation));
+
+    }
+
+    void GenerateTower(Vector3 targetPosition, Vector3 targetRotation)
+    {
+        //GameObject tower1 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x/2 + 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 + 0.5f), Tower.transform.rotation);
+        //GameObject tower2 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x / 2 - 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 - 0.5f), Tower.transform.rotation);
+        //GameObject tower3 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x / 2 + 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 - 0.5f), Tower.transform.rotation);
+        //GameObject tower4 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x / 2 - 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 + 0.5f), Tower.transform.rotation);
+        GameObject tower1 = GameObject.Instantiate(Tower, new Vector3(targetPosition.x , targetPosition.y, targetPosition.z ), Quaternion.Euler(targetRotation));
+
     }
 
 
