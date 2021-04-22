@@ -53,7 +53,7 @@ public class CameraController : MonoBehaviour
         transform.Rotate(-rotationX, 0, 0);
 
         // Focus
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             Vector3 mp = Input.mousePosition;
             Ray ray = _camera.ScreenPointToRay(mp);

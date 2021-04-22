@@ -29,7 +29,11 @@ public class MainController : MonoBehaviour
         styleSelection.onValueChanged.AddListener(delegate {
             DropdownValueChanged(styleSelection);
         });
-        CustomizedMenu.SetActive(false);
+        CustomizedMenu.SetActive(true);
+        ModernMenu.SetActive(false);
+        NorthEuropeMenu.SetActive(false);
+        AmericanHouseMenu.SetActive(false);
+        RenaissanceMenu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -42,7 +46,7 @@ public class MainController : MonoBehaviour
     {
         switch (change.value)
         {
-            case 0:
+            case 1:
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(true);
                 NorthEuropeMenu.SetActive(false);
@@ -66,7 +70,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 5f;
                 break;
-            case 1:
+            case 2:
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(false);
@@ -89,7 +93,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 7.5f;
                 break;
-            case 2:
+            case 3:
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(true);
@@ -112,7 +116,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 7.5f;
                 break;
-            case 3:
+            case 4:
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(false);
@@ -121,13 +125,13 @@ public class MainController : MonoBehaviour
                 Generator.RoofA = HouseRoof;
                 Generator.hasTower = true;
                 Generator.domeNum = 1;
-                Generator.hasWindow = true;
+                Generator.hasWindow = false;
                 Generator.multipleRoof = true;
                 Generator.maxFloor = 3;
                 Generator.minFloor = 3;
                 Generator.branchMaxFloor = 5;
                 Generator.branchMinFloor = 5;
-                Generator.BaseGrammar = RenaissanceGrammar();
+                Generator.BaseGrammar = "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF";
 
                 Generator.unitA = CubeBlock;
                 Generator.unitB = CubeBlock;
@@ -135,7 +139,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 7.5f;
                 break;
-            case 4:
+            case 0:
                 CustomizedMenu.SetActive(true);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(false);
@@ -143,22 +147,12 @@ public class MainController : MonoBehaviour
                 RenaissanceMenu.SetActive(false);
                 break;
             default:
-                Generator.RoofA = NoRoof;
-                Generator.hasTower = false;
-                Generator.domeNum = 0;
-                Generator.hasWindow = false;
-                Generator.multipleRoof = false;
-                Generator.maxFloor = 9;
-                Generator.minFloor = 9;
-                Generator.branchMaxFloor = 9;
-                Generator.branchMinFloor = 9;
-                Generator.BaseGrammar = "PFPFP[+PFPFP]";
-
-                Generator.unitA = CubeBlock;
-                Generator.unitB = CubeBlock;
-                Generator.unitC = CylinderBlock;
-                Generator.stepRotation = 90;
-                Generator.step = 7.5f;
+                CustomizedMenu.SetActive(true);
+                ModernMenu.SetActive(false);
+                NorthEuropeMenu.SetActive(false);
+                AmericanHouseMenu.SetActive(false);
+                RenaissanceMenu.SetActive(false);
+                
                 break;
         }
         
@@ -222,4 +216,121 @@ public class MainController : MonoBehaviour
         }
     }
 
+    public void SetGrammar(string text)
+    {
+        Generator.BaseGrammar = text;
+    }
+
+    public void SetMaxFHeight(string text)
+    {
+        bool result;
+        int floor = 5;
+        result = int.TryParse(text, out floor);
+        if (result)
+        {
+            Generator.maxFloor = floor;
+        }
+    }
+
+    public void SetMinFHeight(string text)
+    {
+        bool result;
+        int floor = 5;
+        result = int.TryParse(text, out floor);
+        if (result)
+        {
+            Generator.minFloor = floor;
+        }
+    }
+
+    public void SetMaxBFHeight(string text)
+    {
+        bool result;
+        int floor = 5;
+        result = int.TryParse(text, out floor);
+        if (result)
+        {
+            Generator.branchMaxFloor = floor;
+        }
+    }
+
+    public void SetMinBFHeight(string text)
+    {
+        bool result;
+        int floor = 5;
+        result = int.TryParse(text, out floor);
+        if (result)
+        {
+            Generator.branchMinFloor = floor;
+        }
+    }
+
+    public void SetStep(string text)
+    {
+        bool result;
+        float val = 7.5f;
+        result = float.TryParse(text, out val);
+        if (result)
+        {
+            Generator.step = val;
+        }
+    }
+
+    public void SetStepRotation(string text)
+    {
+        bool result;
+        float val = 7.5f;
+        result = float.TryParse(text, out val);
+        if (result)
+        {
+            Generator.stepRotation = val;
+        }
+    }
+
+    public void SetWindow(bool val)
+    {
+        if (val)
+        {
+            Generator.hasWindow = true;
+        }
+        else
+        {
+            Generator.hasWindow = false;
+        }
+    }
+
+    public void SetRoof(bool val)
+    {
+        if (val)
+        {
+            Generator.multipleRoof = true;
+        }
+        else
+        {
+            Generator.multipleRoof = false;
+        }
+    }
+
+    public void SetTower(bool val)
+    {
+        if (val)
+        {
+            Generator.hasTower = true;
+        }
+        else
+        {
+            Generator.hasTower = false;
+        }
+    }
+
+    public void SetDomeNumber(string text)
+    {
+        bool result;
+        int val = 0;
+        result = int.TryParse(text, out val);
+        if (result)
+        {
+            Generator.domeNum = val;
+        }
+    }
 }
