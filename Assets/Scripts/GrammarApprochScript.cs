@@ -11,6 +11,7 @@ public class GrammarApprochScript : MonoBehaviour
     public GameObject unitC;
     public float unitHeightC;
     public GameObject RoofA;
+    public GameObject RoofB;
     public GameObject Window;
     public GameObject DomeRoof;
     public GameObject Tower;
@@ -23,6 +24,8 @@ public class GrammarApprochScript : MonoBehaviour
     public float step;
     public int domeNum;
     public bool hasTower;
+    public bool hasWindow;
+    public bool multipleRoof;
     //private Quaternion currentRotation;
     GameObject[] objects;
     // Start is called before the first frame update
@@ -33,11 +36,105 @@ public class GrammarApprochScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        /*if (Input.GetMouseButtonDown(0))
         {
             DeleteAll();
             Generate();
+        }*/
+    }
+
+    public void reGenerate()
+    {
+        DeleteAll();
+        Generate();
+    }
+
+    public void reGenerateModern()
+    {
+        int length = Random.Range(3, 9);
+        int branchNum = Random.Range(0, 3);
+        string grammar = "";
+        for (int i = 0; i < length; i++)
+        {
+            grammar += "PF";
+            if (branchNum > 0 && Random.Range(0f, 1.0f) > 0.5)
+            {
+                int branchLength = Random.Range(2, 6);
+                string branch = "";
+                for (int j = 0; j < branchLength; j++)
+                {
+                    branch += "PF";
+                }
+                grammar = grammar + "[+" + branch + "]";
+                branchNum--;
+            }
         }
+        //return "PFPFP[+PFPFP]";
+        BaseGrammar = grammar;
+        DeleteAll();
+        Generate();
+    }
+
+    public void reGenerateNorthEurope()
+    {
+        int length = Random.Range(3, 5);
+        int branchNum = Random.Range(0, 2);
+        string grammar = "";
+        for (int i = 0; i < length; i++)
+        {
+            grammar += "PF";
+            if (branchNum > 0 && Random.Range(0f, 1.0f) > 0.5)
+            {
+                int branchLength = Random.Range(0, 2);
+                string branch = "";
+                for (int j = 0; j < branchLength; j++)
+                {
+                    branch += "PF";
+                }
+                grammar = grammar + "[+" + branch + "]";
+                branchNum--;
+            }
+        }
+        //return "PFPFP[+PFPFP]";
+        BaseGrammar = grammar;
+        DeleteAll();
+        Generate();
+    }
+
+    public void reGenerateAmericanHouse()
+    {
+        int length = Random.Range(3, 10);
+        int branchNum = Random.Range(0, 3);
+        string grammar = "";
+        for (int i = 0; i < length; i++)
+        {
+            grammar += "PF";
+            if (branchNum > 0 && Random.Range(0f, 1.0f) > 0.5)
+            {
+                int branchLength = Random.Range(0, 3);
+                string branch = "";
+                for (int j = 0; j < branchLength; j++)
+                {
+                    branch += "FP";
+                }
+                if (Random.Range(0, 4) == 0)
+                {
+                    grammar = grammar + "[-" + branch + "]";
+                }
+                else
+                {
+                    grammar = grammar + "[+" + branch + "]";
+                }
+                branchNum--;
+            }
+        }
+        if (Random.Range(0, 4)==0)
+        {
+            grammar += "[+FPFPFPFP]";
+        }
+        BaseGrammar = grammar;
+        DeleteAll();
+        Generate();
     }
 
     void Generate()
@@ -148,15 +245,35 @@ public class GrammarApprochScript : MonoBehaviour
 
         //GenerateRoof(targetPosition,targetRotation,RoofA,floor);
 
-
-
-        GameObject Roof = GameObject.Instantiate(RoofA, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(new Vector3(0, 0, 0)));
-        Roof.transform.Rotate(targetRotation);
-        Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z);
-        
-        if (Random.Range(0, 7) == 1)
+        if (onBranch && multipleRoof)
         {
-            GameObject window = GameObject.Instantiate(Window, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(targetRotation));
+            if (Random.Range(0.0f, 1.0f) > 0.5)
+            {
+                GameObject Roof = GameObject.Instantiate(RoofA, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(new Vector3(0, 0, 0)));
+                Roof.transform.Rotate(targetRotation);
+                Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z);
+            }
+            else
+            {
+                GameObject Roof = GameObject.Instantiate(RoofB, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(new Vector3(0, 0, 0)));
+                Roof.transform.Rotate(targetRotation);
+                Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z);
+            }
+        }
+        else
+        {
+            GameObject Roof = GameObject.Instantiate(RoofA, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(new Vector3(0, 0, 0)));
+            Roof.transform.Rotate(targetRotation);
+            Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z);
+        }
+
+        
+        if (hasWindow)
+        {
+            if (Random.Range(0, 7) == 1)
+            {
+                GameObject window = GameObject.Instantiate(Window, new Vector3(Block.transform.position.x, Block.transform.localScale.y * unitHeight, Block.transform.position.z), Quaternion.Euler(targetRotation));
+            }
         }
     }
 
@@ -167,7 +284,7 @@ public class GrammarApprochScript : MonoBehaviour
         {
             floor = Random.Range(branchMinFloor, branchMaxFloor + 1);
         }
-        floor += 3;
+        floor += 2;
         GameObject Block = GameObject.Instantiate(unit, new Vector3(targetPosition.x, unit.transform.localScale.y *5f * floor/2 , targetPosition.z), unit.transform.rotation);
         Block.transform.localScale = new Vector3(Block.transform.localScale.x, Block.transform.localScale.y * floor, Block.transform.localScale.z);
         Block.transform.position -= new Vector3(0, Block.transform.localScale.y * 2.5f, 0);
