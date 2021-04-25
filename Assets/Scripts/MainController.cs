@@ -34,12 +34,16 @@ public class MainController : MonoBehaviour
         NorthEuropeMenu.SetActive(false);
         AmericanHouseMenu.SetActive(false);
         RenaissanceMenu.SetActive(false);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
     }
 
     void DropdownValueChanged(Dropdown change)
@@ -52,7 +56,8 @@ public class MainController : MonoBehaviour
                 NorthEuropeMenu.SetActive(false);
                 AmericanHouseMenu.SetActive(false);
                 RenaissanceMenu.SetActive(false);
-        
+
+
                 Generator.RoofA = NoRoof;
                 Generator.hasTower = false;
                 Generator.domeNum = 0;
@@ -76,6 +81,7 @@ public class MainController : MonoBehaviour
                 NorthEuropeMenu.SetActive(false);
                 AmericanHouseMenu.SetActive(true);
                 RenaissanceMenu.SetActive(false);
+
                 Generator.RoofA = HouseRoof;         
                 Generator.hasTower = false;
                 Generator.hasWindow = true;
@@ -99,6 +105,7 @@ public class MainController : MonoBehaviour
                 NorthEuropeMenu.SetActive(true);
                 AmericanHouseMenu.SetActive(false);
                 RenaissanceMenu.SetActive(false);
+       
                 Generator.RoofA = HouseRoof;
                 Generator.hasTower = false;
                 Generator.domeNum = 0;
@@ -122,6 +129,7 @@ public class MainController : MonoBehaviour
                 NorthEuropeMenu.SetActive(false);
                 AmericanHouseMenu.SetActive(false);
                 RenaissanceMenu.SetActive(true);
+
                 Generator.RoofA = HouseRoof;
                 Generator.hasTower = true;
                 Generator.domeNum = 1;
@@ -131,7 +139,7 @@ public class MainController : MonoBehaviour
                 Generator.minFloor = 3;
                 Generator.branchMaxFloor = 5;
                 Generator.branchMinFloor = 5;
-                Generator.BaseGrammar = "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF";
+                Generator.BaseGrammar = "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF+PFPFPFPFPFPF[+P]PFP+FPFP[+P]FPFPFP[+P]FPF+PFPFPFPFPFPFP[+P]FPFPF+PFPFPFPFPFPFP[+P]FPFPF";
 
                 Generator.unitA = CubeBlock;
                 Generator.unitB = CubeBlock;
@@ -145,6 +153,7 @@ public class MainController : MonoBehaviour
                 NorthEuropeMenu.SetActive(false);
                 AmericanHouseMenu.SetActive(false);
                 RenaissanceMenu.SetActive(false);
+                
                 break;
             default:
                 CustomizedMenu.SetActive(true);
@@ -152,7 +161,7 @@ public class MainController : MonoBehaviour
                 NorthEuropeMenu.SetActive(false);
                 AmericanHouseMenu.SetActive(false);
                 RenaissanceMenu.SetActive(false);
-                
+
                 break;
         }
         
@@ -185,7 +194,8 @@ public class MainController : MonoBehaviour
     }
     string RenaissanceGrammar()
     {
-        return "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF";
+        //return "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF";
+        return "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF+PFPFPFPFPFPF[+P]PFP";
     }
 
     public void SetModernHeight(string text)
@@ -331,6 +341,18 @@ public class MainController : MonoBehaviour
         if (result)
         {
             Generator.domeNum = val;
+        }
+    }
+    
+    public void hasRoof(bool val)
+    {
+        if (val)
+        {
+            Generator.RoofA = HouseRoof;
+        }
+        else
+        {
+            Generator.RoofA = NoRoof;
         }
     }
 }

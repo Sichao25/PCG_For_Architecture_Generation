@@ -75,6 +75,45 @@ public class GrammarApprochScript : MonoBehaviour
         Generate();
     }
 
+    public void reGenerateRenaissance()
+    {
+        if (Random.Range(0, 3) == 1)
+        {
+            BaseGrammar = "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF";
+            DeleteAll();
+            Generate();
+            return;
+        }
+        string grammar = "FP[+P]FPFPFPFPFPFPFPFPFPFPF[+P]PF";
+        int length = Random.Range(0, 5);
+        for (int i = 0; i < length; i++)
+        {
+            grammar += "+";
+            int size = Random.Range(10,20);
+            for (int x = 0;x < size; x++){
+
+                grammar += "PF";
+
+                int branchNum = Random.Range(0, 3);
+                if (branchNum > 0 && Random.Range(0f, 1.0f) > 0.8)
+                {
+                    int branchLength = Random.Range(1, 3);
+                    string branch = "";
+                    for (int j = 0; j < branchLength; j++)
+                    {
+                        branch += "PF";
+                    }
+                    grammar = grammar + "[+" + branch + "]";
+                    branchNum--;
+                }
+            }
+
+        }
+        BaseGrammar = grammar;
+        DeleteAll();
+        Generate();
+    }
+
     public void reGenerateNorthEurope()
     {
         int length = Random.Range(3, 5);

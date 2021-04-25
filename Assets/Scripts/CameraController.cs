@@ -63,6 +63,11 @@ public class CameraController : MonoBehaviour
                 FocusCameraOnGameObject(Camera.main, hit.transform.gameObject);
             }
         }
+
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, -100, 100),
+            Mathf.Clamp(transform.position.y, 0, 100),
+            Mathf.Clamp(transform.position.z, -100, 100));
     }
 
     Bounds CalculateBounds(GameObject go)
