@@ -65,9 +65,9 @@ public class CameraController : MonoBehaviour
         }
 
         transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, -100, 100),
-            Mathf.Clamp(transform.position.y, 0, 100),
-            Mathf.Clamp(transform.position.z, -100, 100));
+            Mathf.Clamp(transform.position.x, -200, 200),
+            Mathf.Clamp(transform.position.y, 0, 200),
+            Mathf.Clamp(transform.position.z, -200, 200));
     }
 
     Bounds CalculateBounds(GameObject go)
