@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    //edited from the script shared by david-hodgetts
+    //camera controller edited from the script shared by david-hodgetts
     public float translationSensitivity = 2;
     public float zoomSensitiviy = 10;
 
@@ -64,6 +64,7 @@ public class CameraController : MonoBehaviour
             }
         }
 
+        //set restrictions on the movement of camera
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, -200, 200),
             Mathf.Clamp(transform.position.y, 0, 200),

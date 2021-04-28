@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MainController : MonoBehaviour
 {
+    //this script is used to control the UI to interact with generator
     public GameObject CustomizedMenu;
     public Dropdown styleSelection;
 
@@ -50,7 +51,7 @@ public class MainController : MonoBehaviour
     {
         switch (change.value)
         {
-            case 1:
+            case 1://modern office building
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(true);
                 NorthEuropeMenu.SetActive(false);
@@ -75,7 +76,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 5f;
                 break;
-            case 2:
+            case 2://american house
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(false);
@@ -99,7 +100,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 7.5f;
                 break;
-            case 3:
+            case 3://north europe house
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(true);
@@ -123,7 +124,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 7.5f;
                 break;
-            case 4:
+            case 4://renaissance architecture
                 CustomizedMenu.SetActive(false);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(false);
@@ -147,7 +148,7 @@ public class MainController : MonoBehaviour
                 Generator.stepRotation = 90;
                 Generator.step = 7.5f;
                 break;
-            case 0:
+            case 0://customized
                 CustomizedMenu.SetActive(true);
                 ModernMenu.SetActive(false);
                 NorthEuropeMenu.SetActive(false);

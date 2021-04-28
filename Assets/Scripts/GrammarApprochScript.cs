@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GrammarApprochScript : MonoBehaviour
 {
+    //this script is the generator
     public GameObject unitA;
     public float unitHeightA;
     public GameObject unitB;
@@ -26,7 +27,7 @@ public class GrammarApprochScript : MonoBehaviour
     public bool hasTower;
     public bool hasWindow;
     public bool multipleRoof;
-    //private Quaternion currentRotation;
+    
     GameObject[] objects;
     // Start is called before the first frame update
     void Start()
@@ -49,6 +50,7 @@ public class GrammarApprochScript : MonoBehaviour
         Generate();
     }
 
+    //generate modern office building
     public void reGenerateModern()
     {
         int length = Random.Range(3, 9);
@@ -75,6 +77,7 @@ public class GrammarApprochScript : MonoBehaviour
         Generate();
     }
 
+    //generate Renaissance architecture
     public void reGenerateRenaissance()
     {
         if (Random.Range(0, 3) == 1)
@@ -114,6 +117,8 @@ public class GrammarApprochScript : MonoBehaviour
         Generate();
     }
 
+
+    //generate north europe house
     public void reGenerateNorthEurope()
     {
         int length = Random.Range(3, 5);
@@ -140,6 +145,7 @@ public class GrammarApprochScript : MonoBehaviour
         Generate();
     }
 
+    //generate american house
     public void reGenerateAmericanHouse()
     {
         int length = Random.Range(3, 10);
@@ -176,6 +182,8 @@ public class GrammarApprochScript : MonoBehaviour
         Generate();
     }
 
+
+    //generate the base of the architecture from BaseGrammar
     void Generate()
     {
         List<Vector3> basePosition = new List<Vector3>();
@@ -186,16 +194,15 @@ public class GrammarApprochScript : MonoBehaviour
         int count = 0;
         bool branch = false;
         int dome = domeNum;
-        //float step = unitA.transform.localScale.x;
-        //basePosition.Add(transform.position);
-        //baseRotation.Add(transform.eulerAngles);
         for (int i = 0; i < BaseGrammar.Length; i++)
         {
+            //move forward
             if (BaseGrammar[i] == 'F')
             {
                 transform.position = transform.position +
                     new Vector3(step * transform.forward.x, step * transform.forward.y, step * transform.forward.z);
             }
+            //place a block
             if (BaseGrammar[i] == 'P')
             {
                 basePosition.Add(transform.position);
@@ -203,20 +210,24 @@ public class GrammarApprochScript : MonoBehaviour
                 onBranch.Add(branch);
                 count++;
             }
+            //turn certain degree on Y-axis
             if (BaseGrammar[i] == '+')
             {
                 transform.Rotate(0, stepRotation, 0);
             }
+            //turn minus degree on Y-axis
             if (BaseGrammar[i] == '-')
             {
                 transform.Rotate(0, -stepRotation, 0);
             }
+            //branch start
             if (BaseGrammar[i] == '[')
             {
                 branch = true;
                 savedPosition = transform.position;
                 savedRotation = transform.eulerAngles;
             }
+            //branch end
             if (BaseGrammar[i] == ']')
             {
                 branch = false;
@@ -225,11 +236,14 @@ public class GrammarApprochScript : MonoBehaviour
             }
         }
         transform.SetPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)));
+
+        //generate block on the base
         for (int i=0;i<count;i++)
         {
             Vector3 currentPosition = basePosition[i];
             Vector3 currentRotation = baseRotation[i];
             int blockID = Random.Range(1, 4);
+            //check if there is dome
             if (dome > 0)
             {
                 if (i == count - 1)
@@ -261,7 +275,7 @@ public class GrammarApprochScript : MonoBehaviour
     }
 
     
-
+    //generate one block at given position
     void GenerateBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, float unitHeight, bool onBranch)
     {
         int floor = Random.Range(minFloor, maxFloor + 1);
@@ -282,8 +296,8 @@ public class GrammarApprochScript : MonoBehaviour
 
         Block.transform.Rotate(targetRotation);
 
-        //GenerateRoof(targetPosition,targetRotation,RoofA,floor);
-
+        
+        //generate roof
         if (onBranch && multipleRoof)
         {
             if (Random.Range(0.0f, 1.0f) > 0.5)
@@ -306,7 +320,7 @@ public class GrammarApprochScript : MonoBehaviour
             Roof.transform.position = new Vector3(Block.transform.position.x, Block.transform.localScale.y, Block.transform.position.z);
         }
 
-        
+        //generate bay window
         if (hasWindow)
         {
             if (Random.Range(0, 7) == 1)
@@ -316,6 +330,7 @@ public class GrammarApprochScript : MonoBehaviour
         }
     }
 
+    //generate dome
     void GenerateDomeBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, bool onBranch)
     {
         int floor = Random.Range(minFloor, maxFloor + 1);
@@ -335,6 +350,7 @@ public class GrammarApprochScript : MonoBehaviour
 
     }
 
+    //generate cylinder block
     void GenerateCylinderBlock(Vector3 targetPosition, Vector3 targetRotation, GameObject unit, float unitHeight, bool onBranch)
     {
         int floor = Random.Range(minFloor, maxFloor + 1);
@@ -353,17 +369,14 @@ public class GrammarApprochScript : MonoBehaviour
 
     }
 
+    //generate tower
     void GenerateTower(Vector3 targetPosition, Vector3 targetRotation)
     {
-        //GameObject tower1 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x/2 + 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 + 0.5f), Tower.transform.rotation);
-        //GameObject tower2 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x / 2 - 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 - 0.5f), Tower.transform.rotation);
-        //GameObject tower3 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x / 2 + 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 - 0.5f), Tower.transform.rotation);
-        //GameObject tower4 = GameObject.Instantiate(unit, new Vector3(targetPosition.x + blockSize.x / 2 - 0.5f, targetPosition.y, targetPosition.z + blockSize.z / 2 + 0.5f), Tower.transform.rotation);
         GameObject tower1 = GameObject.Instantiate(Tower, new Vector3(targetPosition.x , targetPosition.y, targetPosition.z ), Quaternion.Euler(targetRotation));
 
     }
 
-
+    //delete existing architecture when regenerating
     public void DeleteAll()
     {
         objects = GameObject.FindGameObjectsWithTag("Unit");
